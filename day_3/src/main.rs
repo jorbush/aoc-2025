@@ -16,8 +16,8 @@ fn part_one(input_file_name: &str) -> u32 {
         for _ in 0..2 {
             let max_val = *joltage_rating.iter().max().unwrap();
             let max_index = joltage_rating.iter().position(|&x| x == max_val).unwrap();
-            let max_rating = joltage_rating.remove(max_index);
-            max_batteries[max_index] = max_rating;
+            max_batteries[max_index] = max_val;
+            joltage_rating[max_index] = 0;
         }
         let mut jolts_str = String::new();
         println!("Max batteries selected: {:?}", max_batteries);
