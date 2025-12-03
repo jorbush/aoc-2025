@@ -10,23 +10,18 @@ fn part_one(input_file_name: &str) -> u32 {
             .chars()
             .map(|line| line.to_string().parse::<u32>().unwrap())
             .collect::<Vec<u32>>();
-        let original_length = joltage_rating.len();
-        let mut max_batteries = vec![0u32; original_length];
-        let mut joltage_rating = joltage_rating;
-        for _ in 0..2 {
-            let max_val = *joltage_rating.iter().max().unwrap();
-            let max_index = joltage_rating.iter().position(|&x| x == max_val).unwrap();
-            max_batteries[max_index] = max_val;
-            joltage_rating[max_index] = 0;
-        }
-        let mut jolts_str = String::new();
-        println!("Max batteries selected: {:?}", max_batteries);
-        for jolt in max_batteries.iter() {
-            if jolt != &(0 as u32) {
-                jolts_str.push_str(&jolt.to_string());
-            }
-        }
-        let jolts = jolts_str.parse::<u32>().unwrap();
+        let first_max_val = *joltage_rating[..joltage_rating.len()-1].iter().max().unwrap();
+        let max_index = joltage_rating.iter().position(|&x| x == first_max_val).unwrap();
+        println!("{:?}", &joltage_rating[max_index+1..]);
+        let second_max_val = *joltage_rating[max_index+1..]
+            .iter()
+            .max()
+            .unwrap_or(&0);
+        let jolts = format!(
+            "{}{}",
+            first_max_val,
+            second_max_val
+        ).parse::<u32>().unwrap();
         println!(
             "Bank joltage ratings: {:?}, max batteries combined rating: {}",
             bank_joltage, jolts
@@ -37,8 +32,8 @@ fn part_one(input_file_name: &str) -> u32 {
 }
 
 fn main() {
-    println!("----- AOC 2025 DAY 2 -----");
-    println!("Part one answer: {}", part_one("input_example.txt"));
+    println!("----- AOC 2025 DAY 3 -----");
+    println!("Part one answer: {}", part_one("input.txt"));
 }
 
 #[cfg(test)]
