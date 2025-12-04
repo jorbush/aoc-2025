@@ -64,13 +64,28 @@ fn part_two(input_file_name: &str) -> u64 {
         let mut current_sum = 0;
         for current_id in first_id..=last_id {
             let current_id_str = current_id.to_string();
-            // TODO: an invalid id is one made only of some sequence of digits repeated at least twice
-            let (first_part, last_part) = current_id_str.split_at(current_id_str.len() / 2);
-            println!(
-                "Checking ID {}: first part {}, last part {}",
-                current_id, first_part, last_part
-            );
-            if first_part == last_part {
+            // challenge: an invalid id is one made only of some sequence of digits repeated at least twice
+            // solution: use slicing window to check for this
+            let len = current_id_str.len();
+            let mut is_invalid = false;
+            for slice_size in 1..=(len / 2) {
+                if len % slice_size != 0 {
+                    continue;
+                }
+                let slice = &current_id_str[0..slice_size];
+                let mut repeated = true;
+                for i in (0..len).step_by(slice_size) {
+                    if &current_id_str[i..i + slice_size] != slice {
+                        repeated = false;
+                        break;
+                    }
+                }
+                if repeated {
+                    is_invalid = true;
+                    break;
+                }
+            }
+            if is_invalid {
                 current_invalid_ids.push(current_id_str);
                 current_sum += current_id;
             }
@@ -121,6 +136,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two("input.txt");
-        assert_eq!(result, 0);
+        assert_eq!(result, 70187097315);
     }
 }
